@@ -4,6 +4,7 @@ import org.knullci.knull.domain.model.User;
 
 public class UserMapper {
     public static User fromEntity(org.knullci.knull.persistence.entity.User user) {
+        if (user == null) return null;
         return new User(user.getId(), user.getUsername(), user.getPassword());
     }
 

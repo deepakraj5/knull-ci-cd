@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Jobs | KnullCI</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+<!-- ✅ Top Nav -->
+<div th:replace="layout/navbar :: body"></div>
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+
+    <!-- ✅ Header -->
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl font-semibold text-gray-800">Jobs</h1>
+
+        <a href="/jobs/create"
+           class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">
+            + Create Job
+        </a>
+    </div>
+
+    <!-- ✅ Jobs Table -->
+    <div class="bg-white shadow rounded-xl overflow-hidden">
+
+        <table class="w-full text-left">
+            <thead class="bg-gray-800 text-gray-100 text-sm uppercase">
+            <tr>
+                <th class="py-3 px-4">ID</th>
+                <th class="py-3 px-4">Name</th>
+                <th class="py-3 px-4">Type</th>
+                <th class="py-3 px-4">Branch</th>
+                <th class="py-3 px-4">Created At</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200 text-sm">
+
+            <tr th:each="job : ${jobs}" class="hover:bg-gray-50">
+                <td class="py-3 px-4 font-medium text-gray-700"
+                    th:text="${job.id}">1</td>
+
+                <td class="py-3 px-4 text-gray-700"
+                    th:text="${job.name}">
+                    Backend Build
+                </td>
+
+                <td class="py-3 px-4 text-gray-700"
+                    th:text="${job.jobType}">
+                    SIMPLE
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

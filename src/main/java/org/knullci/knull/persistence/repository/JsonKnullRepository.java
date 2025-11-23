@@ -31,7 +31,7 @@ public class JsonKnullRepository<T> implements KnullRepository<T> {
     @Override
     @SneakyThrows
     public T getByFileName(String fileName) {
-        return mapper.readValue(new File(directory + "/" + fileName + ".json"), type);
+        return mapper.readValue(new File(directory + "/" + fileName), type);
     }
 
     @Override
