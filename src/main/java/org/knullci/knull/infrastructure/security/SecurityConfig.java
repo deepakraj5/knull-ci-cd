@@ -15,13 +15,12 @@ public class SecurityConfig {
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-			.authorizeHttpRequests(auth -> auth
-//					.requestMatchers("/h2-console/**").permitAll()
-					.anyRequest().authenticated())
-			.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
-			.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
-			.formLogin(Customizer.withDefaults());
+		http.csrf(csrf -> csrf
+						.ignoringRequestMatchers("/api/v1/webhook/github"))
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/api/v1/webhook/github").permitAll()
+						.anyRequest().authenticated())
+				.formLogin(Customizer.withDefaults());
 		
 		return http.build();
 	}
