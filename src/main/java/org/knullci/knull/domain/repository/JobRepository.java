@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface JobRepository {
     List<Job> getAllJobs();
     Optional<Job> getJobId(Long jobId);
+    Optional<Job> getJobByRepoName(String repoName);
     void saveJob(Job job);
     void updateJob(Job job);
     void deleteJobById(Long jobId);

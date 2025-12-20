@@ -44,6 +44,16 @@ public class JobRepositoryImpl implements JobRepository {
     }
 
     @Override
+    public Optional<Job> getJobByRepoName(String repoName) {
+        logger.info("Fetching job for repoName: {}", repoName);
+        return this.knullRepository.getAll()
+                .stream()
+                .filter(job -> job.getJobConfig().getGitRepository().equalsIgnoreCase(repoName))
+                .findFirst()
+                .map(JobMapper::fromEntity);
+    }
+
+    @Override
     public void saveJob(Job job) {
         var _job = JobMapper.toEntity(job);
         _job.setId(this.knullRepository.getNextFileId());
