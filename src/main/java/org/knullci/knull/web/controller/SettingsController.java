@@ -19,8 +19,8 @@ public class SettingsController {
     private final GetAllCredentialsQueryHandler getAllCredentialsQueryHandler;
 
     public SettingsController(GetSettingsQueryHandler getSettingsQueryHandler,
-                            SaveSettingsCommandHandler saveSettingsCommandHandler,
-                            GetAllCredentialsQueryHandler getAllCredentialsQueryHandler) {
+            SaveSettingsCommandHandler saveSettingsCommandHandler,
+            GetAllCredentialsQueryHandler getAllCredentialsQueryHandler) {
         this.getSettingsQueryHandler = getSettingsQueryHandler;
         this.saveSettingsCommandHandler = saveSettingsCommandHandler;
         this.getAllCredentialsQueryHandler = getAllCredentialsQueryHandler;
@@ -29,18 +29,36 @@ public class SettingsController {
     @GetMapping
     public String showSettings(Model model) {
         var settings = getSettingsQueryHandler.handle(new GetSettingsQuery());
-        var credentials = getAllCredentialsQueryHandler.handle(new GetAllCredentialsQuery());
-        
+
         model.addAttribute("settings", settings);
-        model.addAttribute("credentials", credentials);
 
         return "settings/index";
     }
 
-    @PostMapping
-    public String saveSettings(@RequestParam("githubCredentialId") Long githubCredentialId) {
+    @GetMapping("/github")
+    public String showGitHubSettings(Model model) {
+        var settings = getSettingsQueryHandler.handle(new GetSettingsQuery());
+        var credentials = getAllCredentialsQueryHandler.handle(new GetAllCredentialsQuery());
+
+        // Find the selected credential if one is configured
+        var selectedCredential = credentials.stream()
+                .filter(cred -> settings.getGithubCredentialId() != null &&
+                        cred.getId().equals(settings.getGithubCredentialId()))
+                .findFirst()
+                .orElse(null);
+
+        model.addAttribute("settings", settings);
+        model.addAttribute("credentials", credentials);
+        model.addAttribute("selectedCredential", selectedCredential);
+
+        return "settings/github";
+    }
+
+    @PostMapping("/github")
+    public String saveGitHubSettings(
+            @RequestParam(value = "githubCredentialId", required = false) Long githubCredentialId) {
         saveSettingsCommandHandler.handle(new SaveSettingsCommand(githubCredentialId));
-        return "redirect:/settings";
+        return "redirect:/settings/github";
     }
 
 }

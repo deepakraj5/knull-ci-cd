@@ -52,7 +52,8 @@ public class JsonKnullRepository<T> implements KnullRepository<T> {
         File folder = new File(directory);
         File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
 
-        if (files == null) return result;
+        if (files == null)
+            return result;
 
         for (File file : files) {
             if (file.isFile()) {
@@ -77,7 +78,8 @@ public class JsonKnullRepository<T> implements KnullRepository<T> {
         File folder = new File(directory);
         File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
 
-        if (files == null) return 1L;
+        if (files == null)
+            return 1L;
 
         Optional<Long> lastFile = Arrays.stream(files).map(file -> file.getName().replace(".json", ""))
                 .map(Long::parseLong)

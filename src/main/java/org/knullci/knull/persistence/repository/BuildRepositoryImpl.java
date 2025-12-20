@@ -22,8 +22,7 @@ public class BuildRepositoryImpl implements BuildRepository {
     public BuildRepositoryImpl() {
         this.knullRepository = new JsonKnullRepository<>(
                 BUILD_STORAGE_LOCATION,
-                org.knullci.knull.persistence.entity.Build.class
-        );
+                org.knullci.knull.persistence.entity.Build.class);
     }
 
     @Override
@@ -59,6 +58,23 @@ public class BuildRepositoryImpl implements BuildRepository {
                 .stream()
                 .map(BuildMapper::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Build> findAllPaginated(int page, int size) {
+        logger.info("Fetching builds - page: {}, size: {}", page, size);
+        return this.knullRepository.getAll()
+                .stream()
+                .map(BuildMapper::fromEntity)
+                .sorted((b1, b2) -> Long.compare(b2.getId(), b1.getId())) // Sort by ID descending (newest first)
+                .skip((long) page * size)
+                .limit(size)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public long countAll() {
+        return this.knullRepository.getAll().size();
     }
 
     @Override

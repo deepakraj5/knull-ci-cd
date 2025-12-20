@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GitHub Integration - Knull CI</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <div th:replace="~{layout/navbar :: body}"></div>
+
+    <!-- Page Container -->
+    <div class="ml-64 p-8">
+        <div class="max-w-4xl mx-auto">
+
+            <!-- Header with Back Button -->
+            <div class="mb-8">
+                <a href="/settings" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back to Settings
+                </a>
+                <h1 class="text-3xl font-bold text-gray-900">GitHub Integration</h1>
+                <p class="text-gray-600 mt-2">Connect your GitHub account to enable commit status updates and webhooks
+                </p>
+            </div>
+
+            <!-- GitHub Settings Form -->
+            <div class="bg-white rounded-lg shadow-md p-8 mb-6">
+                <div class="flex items-center mb-6">
+                    <div class="p-3 bg-purple-100 rounded-lg mr-4">
+                        <svg class="h-8 w-8 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900">Configuration</h2>
+                        <p class="text-sm text-gray-600">Select a credential containing your GitHub Personal Access
+                            Token</p>
+                    </div>
+                </div>
+
+                <form th:action="@{/settings/github}" method="post" class="space-y-6">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                    <!-- Credential Selection -->
+                    <div>
+                        <label for="githubCredentialId" class="block text-sm font-medium text-gray-700 mb-2">
+                            GitHub Credential (Token)
+                        </label>
+                        <select id="githubCredentialId" name="githubCredentialId"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="">-- Select a Credential --</option>
+                            <option th:each="cred : ${credentials}" th:value="${cred.id}" th:text="${cred.name}"
+                                th:selected="${settings.githubCredentialId == cred.id}">
+                            </option>
+                        </select>
+                        <p class="text-sm text-gray-500 mt-2 flex items-start">
+                            <svg class="h-4 w-4 text-purple-600 mr-1 mt-0.5 flex-shrink-0" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Select a credential that contains your GitHub Personal Access Token. If you don't have
+                                one, <a href="/credentials/create"
+                                    class="text-purple-600 hover:underline font-medium">create a new
+                                    credential</a>.</span>
+                        </p>
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="flex gap-4 pt-4">
+                        <button type="submit"
+                            class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition duration-150 font-medium">
+                            Save Configuration
+                        </button>
+                        <a href="/settings"
+                            class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition duration-150 font-medium inline-block">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Setup Instructions -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                <h3 class="font-semibold text-blue-900 mb-3 flex items-center">
+                    <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    How to set up GitHub Integration:
+                </h3>
+                <ol class="text-sm text-blue-800 space-y-2 list-decimal list-inside ml-7">
+                    <li>Go to GitHub → Settings → Developer settings → Personal access tokens</li>
+                    <li>Generate a new token (classic) with the following permissions:
+                        <ul class="list-disc list-inside ml-6 mt-1 space-y-1">
+                            <li><code class="bg-blue-100 px-1 rounded">repo</code> - Full control of private
+                                repositories</li>
+                            <li><code class="bg-blue-100 px-1 rounded">repo:status</code> - Access commit status</li>
+                        </ul>
+                    </li>
+                    <li>Copy the generated token</li>
+                    <li>Go to <a href="/credentials/create"
+                            class="text-blue-600 hover:underline font-medium">Credentials</a> and create a new Token
+                        credential with your GitHub token</li>
+                    <li>Return here and select the credential from the dropdown above</li>
+                    <li>Click "Save Configuration"</li>
+                </ol>
+            </div>
+
+            <!-- Current Configuration Status -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 class="font-semibold text-gray-900 mb-4 flex items-center">
+                    <svg class="h-5 w-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Current Configuration
+                </h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                        <span class="text-gray-600">GitHub Credential:</span>
+                        <span class="font-medium text-gray-900"
+                            th:text="${selectedCredential != null ? selectedCredential.name : 'Not configured'}"></span>
+                    </div>
+                    <div class="flex items-center justify-between py-2">
+                        <span class="text-gray-600">Status:</span>
+                        <span th:if="${settings.githubCredentialId != null}"
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                            <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Configured
+                        </span>
+                        <span th:unless="${settings.githubCredentialId != null}"
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                            <svg class="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Not Configured
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

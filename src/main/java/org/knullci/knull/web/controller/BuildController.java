@@ -17,16 +17,26 @@ public class BuildController {
     private final BuildRepository buildRepository;
     private final GetBuildsByJobIdQueryHandler getBuildsByJobIdQueryHandler;
 
-    public BuildController(BuildRepository buildRepository, 
-                          GetBuildsByJobIdQueryHandler getBuildsByJobIdQueryHandler) {
+    public BuildController(BuildRepository buildRepository,
+            GetBuildsByJobIdQueryHandler getBuildsByJobIdQueryHandler) {
         this.buildRepository = buildRepository;
         this.getBuildsByJobIdQueryHandler = getBuildsByJobIdQueryHandler;
     }
 
     @GetMapping
-    public String getAllBuilds(Model model) {
-        var builds = buildRepository.findAll();
+    public String getAllBuilds(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            Model model) {
+        var builds = buildRepository.findAllPaginated(page, size);
+        var totalBuilds = buildRepository.countAll();
+        var totalPages = (int) Math.ceil((double) totalBuilds / size);
+
         model.addAttribute("builds", builds);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalBuilds", totalBuilds);
+
         return "builds/index";
     }
 
@@ -52,11 +62,15 @@ public class BuildController {
 
     @GetMapping("/{id}/pipeline")
     public String getBuildPipeline(@PathVariable Long id, Model model) {
-        // Temporarily hide pipeline view; redirect to overview
-        return "redirect:/builds/" + id + "/overview";
+        var build = buildRepository.findById(id);
+        if (build.isEmpty()) {
+            return "redirect:/builds";
+        }
+        model.addAttribute("build", build.get());
+        return "builds/pipeline";
     }
 
-    @GetMapping("/{id}/status")
+    @GetMapping(value = "/{id}/status", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> getBuildStatus(@PathVariable Long id) {
         var build = buildRepository.findById(id);
@@ -77,7 +91,8 @@ public class BuildController {
                         return;
                     }
 
-                    emitter.send(SseEmitter.event().data(buildOpt.get()));
+                    // Send build data as JSON
+                    emitter.send(buildOpt.get(), MediaType.APPLICATION_JSON);
 
                     var status = buildOpt.get().getStatus();
                     if (status != null && status.name().matches("SUCCESS|FAILURE")) {

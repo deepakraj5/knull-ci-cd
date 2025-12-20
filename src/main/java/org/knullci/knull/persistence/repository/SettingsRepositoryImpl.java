@@ -13,16 +13,15 @@ import java.util.Optional;
 public class SettingsRepositoryImpl implements SettingsRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(SettingsRepositoryImpl.class);
-    
+
     private final KnullRepository<org.knullci.knull.persistence.entity.Settings> knullRepository;
     private static final String SETTINGS_STORAGE_LOCATION = "storage/settings";
-    private static final String SETTINGS_FILE_NAME = "settings.json";
+    private static final String SETTINGS_FILE_NAME = "settings";
 
     public SettingsRepositoryImpl() {
         this.knullRepository = new JsonKnullRepository<>(
                 SETTINGS_STORAGE_LOCATION,
-                org.knullci.knull.persistence.entity.Settings.class
-        );
+                org.knullci.knull.persistence.entity.Settings.class);
     }
 
     @Override
@@ -37,7 +36,7 @@ public class SettingsRepositoryImpl implements SettingsRepository {
     @Override
     public Optional<Settings> getSettings() {
         logger.info("Fetching settings");
-        return Optional.ofNullable(this.knullRepository.getByFileName(SETTINGS_FILE_NAME))
+        return Optional.ofNullable(this.knullRepository.getByFileName(SETTINGS_FILE_NAME + ".json"))
                 .map(SettingsMapper::fromEntity);
     }
 }

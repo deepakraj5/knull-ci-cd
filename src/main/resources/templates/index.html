@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Knull CI - Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
+
 <body class="bg-gray-100 text-gray-800">
 
     <div th:replace="~{layout/navbar :: body}"></div>
@@ -13,7 +15,7 @@
     <!-- Dashboard Container -->
     <div class="ml-64 p-8">
         <div class="max-w-7xl mx-auto">
-            
+
             <!-- Header -->
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
@@ -22,17 +24,18 @@
 
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                
+
                 <!-- Jobs Card -->
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-gray-500 text-sm font-medium">Total Jobs</p>
-                            <p class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2" th:text="${totalJobs}">0</p>
                         </div>
                         <div class="bg-blue-100 p-3 rounded-lg">
                             <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                         </div>
                     </div>
@@ -43,11 +46,12 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-gray-500 text-sm font-medium">Total Builds</p>
-                            <p class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2" th:text="${totalBuilds}">0</p>
                         </div>
                         <div class="bg-green-100 p-3 rounded-lg">
                             <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                     </div>
@@ -58,11 +62,12 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-gray-500 text-sm font-medium">Credentials</p>
-                            <p class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2" th:text="${totalCredentials}">0</p>
                         </div>
                         <div class="bg-purple-100 p-3 rounded-lg">
                             <svg class="h-8 w-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                         </div>
                     </div>
@@ -73,11 +78,12 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-gray-500 text-sm font-medium">Active Builds</p>
-                            <p class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2" th:text="${activeBuilds}">0</p>
                         </div>
                         <div class="bg-yellow-100 p-3 rounded-lg">
                             <svg class="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
                         </div>
                     </div>
@@ -85,14 +91,97 @@
 
             </div>
 
-            <!-- Recent Activity -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
-                <div class="text-center py-12 text-gray-500">
+            <!-- Recent Builds -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-gray-900">Recent Builds</h2>
+                    <a th:href="@{/builds}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">View All →</a>
+                </div>
+
+                <div th:if="${recentBuilds != null && !recentBuilds.isEmpty()}">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Build</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Job</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Branch</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Commit</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Duration</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr th:each="build : ${recentBuilds}">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-sm font-medium text-blue-600" th:text="'#' + ${build.id}"></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900" th:text="${build.jobName}"></div>
+                                    <div class="text-sm text-gray-500"
+                                        th:text="${build.repositoryOwner + '/' + build.repositoryName}"></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${build.branch}">
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900 font-mono"
+                                        th:text="${#strings.substring(build.commitSha, 0, 7)}"></div>
+                                    <div class="text-xs text-gray-500 max-w-xs truncate"
+                                        th:text="${build.commitMessage}"></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span th:if="${build.status.name() == 'SUCCESS'}"
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Success
+                                    </span>
+                                    <span th:if="${build.status.name() == 'FAILURE'}"
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        Failure
+                                    </span>
+                                    <span th:if="${build.status.name() == 'IN_PROGRESS'}"
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        In Progress
+                                    </span>
+                                    <span th:if="${build.status.name() == 'PENDING'}"
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                        Pending
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span th:if="${build.duration != null}"
+                                        th:text="${build.duration / 1000} + 's'"></span>
+                                    <span th:unless="${build.duration != null}">-</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a th:href="@{/builds/{id}/pipeline(id=${build.id})}"
+                                        class="text-blue-600 hover:text-blue-900">View</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div th:if="${recentBuilds == null || recentBuilds.isEmpty()}" class="text-center py-12 text-gray-500">
                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
-                    <p class="mt-4">No recent activity</p>
+                    <p class="mt-4">No recent builds</p>
                 </div>
             </div>
 
@@ -100,4 +189,5 @@
     </div>
 
 </body>
+
 </html>
