@@ -1,14 +1,12 @@
-job:
-  name: Knull CI/CD Build Pipeline
-  
-  steps:
+name: Knull CI/CD Build Pipeline
+steps:
     - name: Compile Java Sources
       run:
         tool: mvn
         args: ["clean", "compile"]
     
     - name: Run Tests
-      run:
+      run: 
         tool: mvn
         args: ["test"]
     
