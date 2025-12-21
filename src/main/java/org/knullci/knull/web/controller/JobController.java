@@ -30,12 +30,12 @@ public class JobController {
     private final DeleteJobCommandHandler deleteJobCommandHandler;
     private final GetBuildsByJobIdQueryHandler getBuildsByJobIdQueryHandler;
 
-    public JobController(CreateJobCommandHandler createJobCommandHandler, 
-                        GetAllQueryHandler getAllQueryHandler,
-                        GetAllCredentialsQueryHandler getAllCredentialsQueryHandler,
-                        GetJobByIdQueryHandler getJobByIdQueryHandler,
-                        DeleteJobCommandHandler deleteJobCommandHandler,
-                        GetBuildsByJobIdQueryHandler getBuildsByJobIdQueryHandler) {
+    public JobController(CreateJobCommandHandler createJobCommandHandler,
+            GetAllQueryHandler getAllQueryHandler,
+            GetAllCredentialsQueryHandler getAllCredentialsQueryHandler,
+            GetJobByIdQueryHandler getJobByIdQueryHandler,
+            DeleteJobCommandHandler deleteJobCommandHandler,
+            GetBuildsByJobIdQueryHandler getBuildsByJobIdQueryHandler) {
         this.createJobCommandHandler = createJobCommandHandler;
         this.getAllQueryHandler = getAllQueryHandler;
         this.getAllCredentialsQueryHandler = getAllCredentialsQueryHandler;
@@ -48,7 +48,7 @@ public class JobController {
     public String showCreateJob(Model model) {
         model.addAttribute("jobForm", new JobForm());
         model.addAttribute("jobTypes", JobType.values());
-        
+
         // Fetch all credentials for the dropdown
         var credentials = getAllCredentialsQueryHandler.handle(new GetAllCredentialsQuery());
         model.addAttribute("credentials", credentials);
@@ -73,8 +73,7 @@ public class JobController {
                 jobForm.getCredentialId(),
                 jobForm.getBranch(),
                 jobForm.getBranchPattern(),
-                jobForm.getScriptFileLocation()
-        ));
+                jobForm.getScriptFileLocation()));
 
         return "redirect:/jobs";
     }

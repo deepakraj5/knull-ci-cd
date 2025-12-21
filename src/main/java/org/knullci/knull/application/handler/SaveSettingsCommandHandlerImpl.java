@@ -22,11 +22,11 @@ public class SaveSettingsCommandHandlerImpl implements SaveSettingsCommandHandle
     @Override
     public void handle(SaveSettingsCommand command) {
         logger.info("Saving settings with GitHub credential ID: {}", command.getGithubCredentialId());
-        
+
         Settings settings = new Settings();
         settings.setId(1L);
         settings.setGithubCredentialId(command.getGithubCredentialId());
-        
+
         this.settingsRepository.saveSettings(settings);
     }
 }

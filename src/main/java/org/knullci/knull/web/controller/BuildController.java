@@ -25,7 +25,7 @@ public class BuildController {
 
     @GetMapping
     public String getAllBuilds(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "10") int size,
             Model model) {
         var builds = buildRepository.findAllPaginated(page, size);
         var totalBuilds = buildRepository.countAll();

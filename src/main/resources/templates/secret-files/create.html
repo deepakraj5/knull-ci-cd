@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create Secret File - Knull CI</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <div th:replace="~{layout/navbar :: body}"></div>
+
+    <!-- Page Container -->
+    <div class="ml-64 p-8">
+        <div class="max-w-3xl mx-auto">
+
+            <!-- Header -->
+            <div class="mb-8">
+                <a th:href="@{/secret-files}"
+                    class="text-blue-600 hover:text-blue-800 font-medium mb-4 inline-flex items-center gap-2">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back to Secret Files
+                </a>
+                <h1 class="text-3xl font-bold text-gray-900 mt-4">Create Secret File</h1>
+                <p class="text-gray-600 mt-2">Store sensitive data securely with AES-256 encryption</p>
+            </div>
+
+            <!-- Create Form -->
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <form th:action="@{/secret-files/create}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                    <!-- Name -->
+                    <div class="mb-6">
+                        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Name <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="name" name="name" required
+                            placeholder="e.g., production-env, ssl-certificate"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <p class="mt-2 text-sm text-gray-600">A unique identifier for this secret file</p>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-6">
+                        <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Description
+                        </label>
+                        <textarea id="description" name="description" rows="3"
+                            placeholder="Describe what this secret file contains..."
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                    </div>
+
+                    <!-- Type -->
+                    <div class="mb-6">
+                        <label for="type" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Type <span class="text-red-500">*</span>
+                        </label>
+                        <select id="type" name="type" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="FILE">Generic File</option>
+                            <option value="ENV_FILE">Environment Variables (.env)</option>
+                            <option value="CERTIFICATE">SSL/TLS Certificate</option>
+                            <option value="SSH_KEY">SSH Private Key</option>
+                            <option value="KUBECONFIG">Kubernetes Config</option>
+                        </select>
+                        <p class="mt-2 text-sm text-gray-600">Select the type of secret you're storing</p>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="mb-6">
+                        <label for="content" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Content <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="content" name="content" rows="12" required
+                            placeholder="Paste your secret content here...&#10;&#10;Example for .env file:&#10;DATABASE_URL=postgresql://...&#10;API_KEY=sk-...&#10;SECRET_TOKEN=..."
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"></textarea>
+                        <div class="mt-2 flex items-start gap-2 text-sm text-amber-700 bg-amber-50 p-3 rounded-lg">
+                            <svg class="h-5 w-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span>This content will be encrypted with AES-256 before storage. It cannot be viewed after
+                                creation.</span>
+                        </div>
+                    </div>
+
+                    <!-- Mount Path -->
+                    <div class="mb-8">
+                        <label for="mountPath" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Mount Path (Optional)
+                        </label>
+                        <input type="text" id="mountPath" name="mountPath"
+                            placeholder="e.g., /app/.env, /etc/ssl/cert.pem"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm">
+                        <p class="mt-2 text-sm text-gray-600">Where to mount this file during build execution</p>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex items-center justify-end gap-4 pt-6 border-t border-gray-200">
+                        <a th:href="@{/secret-files}"
+                            class="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+                            Cancel
+                        </a>
+                        <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            Create Secret File
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
