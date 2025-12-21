@@ -1,0 +1,18 @@
+job:
+  name: Knull CI/CD Build Pipeline
+  
+  steps:
+    - name: Compile Java Sources
+      run:
+        tool: mvn
+        args: ["clean", "compile"]
+    
+    - name: Run Tests
+      run:
+        tool: mvn
+        args: ["test"]
+    
+    - name: Package Application
+      run:
+        tool: mvn
+        args: ["package", "-DskipTests"]
