@@ -91,6 +91,82 @@
 
             </div>
 
+            <!-- Executor Status Section -->
+            <div class="mb-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div
+                                class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 12h14M12 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Necrosword Executor</h3>
+                                <p class="text-gray-500 text-sm">Build execution engine</p>
+                            </div>
+                        </div>
+                        <div id="executor-status-badge" class="flex items-center px-4 py-2 rounded-full bg-gray-100">
+                            <span id="executor-status-dot"
+                                class="w-3 h-3 rounded-full bg-gray-400 mr-2 animate-pulse"></span>
+                            <span id="executor-status-text" class="text-sm font-medium text-gray-600">Checking...</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Connection Status -->
+                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-500 text-sm">Connection</span>
+                                <span id="executor-connection" class="text-sm font-semibold text-gray-700">--</span>
+                            </div>
+                            <div class="mt-2 flex items-center">
+                                <svg id="executor-connection-icon" class="w-5 h-5 text-gray-400 mr-2" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                                </svg>
+                                <span id="executor-host" class="text-xs text-gray-500">localhost:8081</span>
+                            </div>
+                        </div>
+
+                        <!-- Running Processes -->
+                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-500 text-sm">Running Processes</span>
+                                <span id="executor-processes" class="text-2xl font-bold text-gray-900">-</span>
+                            </div>
+                            <div class="mt-2 flex items-center">
+                                <div class="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
+                                    <div id="executor-processes-bar"
+                                        class="h-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all duration-500"
+                                        style="width: 0%"></div>
+                                </div>
+                                <span id="executor-max-processes" class="text-xs text-gray-500 ml-2">/ 10</span>
+                            </div>
+                        </div>
+
+                        <!-- Activity Status -->
+                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-500 text-sm">Activity</span>
+                                <span id="executor-activity" class="text-sm font-semibold text-gray-700">--</span>
+                            </div>
+                            <div class="mt-2 flex items-center">
+                                <svg id="executor-activity-icon" class="w-5 h-5 text-gray-400 mr-2" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                <span id="executor-last-check" class="text-xs text-gray-500">Last check: --</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- System Metrics Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 
@@ -425,6 +501,92 @@
 
         // Start polling
         setInterval(fetchMetrics, POLL_INTERVAL);
+
+        // ==================== EXECUTOR STATUS ====================
+        const EXECUTOR_POLL_INTERVAL = 5000; // 5 seconds
+        const MAX_CONCURRENT_PROCESSES = 10;
+
+        // Update executor status UI
+        function updateExecutorStatus(data) {
+            const statusDot = document.getElementById('executor-status-dot');
+            const statusText = document.getElementById('executor-status-text');
+            const statusBadge = document.getElementById('executor-status-badge');
+            const connectionEl = document.getElementById('executor-connection');
+            const connectionIcon = document.getElementById('executor-connection-icon');
+            const processesEl = document.getElementById('executor-processes');
+            const processesBar = document.getElementById('executor-processes-bar');
+            const activityEl = document.getElementById('executor-activity');
+            const activityIcon = document.getElementById('executor-activity-icon');
+            const lastCheckEl = document.getElementById('executor-last-check');
+
+            if (data.connected) {
+                // Connected state (light mode colors)
+                statusDot.className = 'w-3 h-3 rounded-full bg-green-500 mr-2 animate-pulse';
+                statusText.textContent = 'Online';
+                statusText.className = 'text-sm font-medium text-green-700';
+                statusBadge.className = 'flex items-center px-4 py-2 rounded-full bg-green-100 border border-green-200';
+
+                connectionEl.textContent = data.connectionStatus;
+                connectionEl.className = 'text-sm font-semibold text-green-600';
+                connectionIcon.className = 'w-5 h-5 text-green-500 mr-2';
+
+                // Update processes
+                processesEl.textContent = data.runningProcesses;
+                const processPercent = (data.runningProcesses / MAX_CONCURRENT_PROCESSES) * 100;
+                processesBar.style.width = processPercent + '%';
+
+                // Activity status
+                if (data.runningProcesses > 0) {
+                    activityEl.textContent = 'Busy';
+                    activityEl.className = 'text-sm font-semibold text-yellow-600';
+                    activityIcon.className = 'w-5 h-5 text-yellow-500 mr-2 animate-pulse';
+                } else {
+                    activityEl.textContent = 'Idle';
+                    activityEl.className = 'text-sm font-semibold text-gray-600';
+                    activityIcon.className = 'w-5 h-5 text-gray-400 mr-2';
+                }
+            } else {
+                // Disconnected state (light mode colors)
+                statusDot.className = 'w-3 h-3 rounded-full bg-red-500 mr-2';
+                statusText.textContent = 'Offline';
+                statusText.className = 'text-sm font-medium text-red-700';
+                statusBadge.className = 'flex items-center px-4 py-2 rounded-full bg-red-100 border border-red-200';
+
+                connectionEl.textContent = 'Disconnected';
+                connectionEl.className = 'text-sm font-semibold text-red-600';
+                connectionIcon.className = 'w-5 h-5 text-red-500 mr-2';
+
+                processesEl.textContent = '-';
+                processesBar.style.width = '0%';
+
+                activityEl.textContent = 'Unavailable';
+                activityEl.className = 'text-sm font-semibold text-red-600';
+                activityIcon.className = 'w-5 h-5 text-red-500 mr-2';
+            }
+
+            // Update last check time
+            const now = new Date();
+            lastCheckEl.textContent = 'Last check: ' + now.toLocaleTimeString();
+        }
+
+        // Fetch executor status
+        async function fetchExecutorStatus() {
+            try {
+                const response = await fetch('/api/executor/status');
+                const data = await response.json();
+                updateExecutorStatus(data);
+            } catch (error) {
+                console.error('Failed to fetch executor status:', error);
+                // Show disconnected state on error
+                updateExecutorStatus({ connected: false });
+            }
+        }
+
+        // Initial executor status fetch
+        fetchExecutorStatus();
+
+        // Start executor status polling
+        setInterval(fetchExecutorStatus, EXECUTOR_POLL_INTERVAL);
     </script>
 
 </body>
