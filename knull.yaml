@@ -21,10 +21,6 @@ steps:
         tool: docker
         args: ["build", "--target", "production", "-t", "knull-ci-cd:latest", "."]
 
-    - name: Tag with Timestamp
-      run:
-        tool: docker
-        args: ["tag", "knull-ci-cd:latest", "knull-ci-cd:$(date +%Y%m%d-%H%M%S)"]
 
     - name: Cleanup Build Images
       run:
