@@ -1,0 +1,94 @@
+[
+  {
+    "type": "java.util.ArrayList",
+    "allPublicMethods": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "type": "java.util.LinkedList",
+    "allPublicMethods": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "type": "java.util.HashSet",
+    "allPublicMethods": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "type": "java.util.LinkedHashSet",
+    "allPublicMethods": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "type": "java.util.TreeSet",
+    "allPublicMethods": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "type": "java.util.HashMap",
+    "allPublicMethods": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "type": "java.util.LinkedHashMap",
+    "allPublicMethods": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "type": "java.util.TreeMap",
+    "allPublicMethods": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "type": "java.util.Collections$EmptyList",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.util.Collections$EmptySet",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.util.Collections$EmptyMap",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.util.Collections$SingletonList",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.util.Collections$UnmodifiableList",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.util.Collections$UnmodifiableRandomAccessList",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.util.ImmutableCollections$ListN",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.util.ImmutableCollections$List12",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.util.Optional",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.lang.String",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.lang.Boolean",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.lang.Integer",
+    "allPublicMethods": true
+  },
+  {
+    "type": "java.lang.Long",
+    "allPublicMethods": true
+  }
+]
