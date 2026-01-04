@@ -30,11 +30,11 @@ jobs:
           
       - name: Build with Maven
         run: |
-          mvn clean package -DskipTests -Drevision=${{ github.ref_name || inputs.version }}
+          mvn clean package -DskipTests -Drevision=${{ inputs.version || github.ref_name }}
           
       - name: Rename JAR
         run: |
-          VERSION="${{ github.ref_name || inputs.version }}"
+          VERSION="${{ inputs.version || github.ref_name }}"
           VERSION="${VERSION#v}"  # Remove 'v' prefix if present
           mv target/*.jar target/knull-${VERSION}.jar
           
@@ -64,7 +64,7 @@ jobs:
           
       - name: Rename binary
         run: |
-          VERSION="${{ github.ref_name || inputs.version }}"
+          VERSION="${{ inputs.version || github.ref_name }}"
           VERSION="${VERSION#v}"
           mv target/knull target/knull-${VERSION}-linux-amd64
           
