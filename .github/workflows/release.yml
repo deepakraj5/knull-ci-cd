@@ -45,7 +45,7 @@ jobs:
           path: target/knull-*.jar
 
   build-native-linux:
-    name: Build Native (Linux - Static)
+    name: Build Native (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,9 +57,8 @@ jobs:
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
-          native-image-musl: 'true'  # Enable musl for static linking
           
-      - name: Build Static Native Image
+      - name: Build Native Image
         run: |
           mvn -Pnative native:compile -DskipTests
           
