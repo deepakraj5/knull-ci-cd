@@ -1,16 +1,33 @@
-name: Knull CI/CD Build Pipeline
+name: Knull Java CI/CD Build Pipeline
+
 steps:
-    - name: Compile Java Sources
+    - name: Compile Java Sources (Docker)
       run:
-        tool: mvn
-        args: ["clean", "compile"]
-    
-    - name: Run Tests
-      run: 
-        tool: mvn
-        args: ["test"]
-    
-    - name: Package Application
+        tool: docker
+        args: ["build", "--target", "compile", "-t", "knull-ci-cd:compile", "."]
+
+    - name: Run Tests (Docker)
       run:
-        tool: mvn
-        args: ["package", "-DskipTests"]
+        tool: docker
+        args: ["build", "--target", "test", "-t", "knull-ci-cd:test", "."]
+
+    - name: Package Application (Docker)
+      run:
+        tool: docker
+        args: ["build", "--target", "package", "-t", "knull-ci-cd:package", "."]
+
+    - name: Build Production Image
+      run:
+        tool: docker
+        args: ["build", "--target", "production", "-t", "knull-ci-cd:latest", "."]
+
+
+    - name: Cleanup Build Images
+      run:
+        tool: docker
+        args: ["rmi", "knull-ci-cd:compile", "knull-ci-cd:test", "knull-ci-cd:package"]
+
+    - name: Cleanup Old Images
+      run:
+        tool: docker
+        args: ["image", "prune", "-f", "--filter", "until=24h"]
