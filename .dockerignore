@@ -1,0 +1,60 @@
+# ==============================================================================
+# Docker Ignore File
+# Exclude unnecessary files from Docker build context
+# ==============================================================================
+
+# Build outputs
+target/
+bin/
+build/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+LICENSE
+docs/
+
+# Node modules (if any)
+node_modules/
+package-lock.json
+
+# Logs and temp files
+*.log
+*.tmp
+.knull.pid
+knull.log
+
+# Local configuration
+*.local
+.env
+.env.*
+
+# Test files (not needed in production image)
+src/test/
+
+# Maven wrapper (we install maven in Docker)
+# .mvn/
+# mvnw
+# mvnw.cmd
+
+# Workspace and storage (mounted as volumes)
+workspace/
+storage/
+
+# Native build artifacts
+*.so
+*.dylib
+*.dll
