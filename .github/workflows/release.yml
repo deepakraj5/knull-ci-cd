@@ -46,7 +46,7 @@ jobs:
 
   build-native-linux:
     name: Build Native (Linux)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04  # Use older Ubuntu for wider GLIBC compatibility
     steps:
       - uses: actions/checkout@v4
       
