@@ -45,8 +45,8 @@ jobs:
           path: target/knull-*.jar
 
   build-native-linux:
-    name: Build Native (Linux)
-    runs-on: ubuntu-20.04  # Use older Ubuntu for wider GLIBC compatibility
+    name: Build Native (Linux - Static)
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
@@ -57,10 +57,12 @@ jobs:
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           native-image-job-reports: 'true'
+          native-image-musl: 'true'  # Enable musl for static linking
           
-      - name: Build Native Image
+      - name: Build Static Native Image
         run: |
-          mvn -Pnative native:compile -DskipTests
+          mvn -Pnative native:compile -DskipTests \
+            -Dnative.image.buildArgs="--static --libc=musl"
           
       - name: Rename binary
         run: |
