@@ -26,7 +26,6 @@ steps:
         tool: docker
         args: ["rmi", "knull-ci-cd:compile", "knull-ci-cd:test", "knull-ci-cd:package"]
 
-
     - name: Cleanup Old Images
       run:
         tool: docker
