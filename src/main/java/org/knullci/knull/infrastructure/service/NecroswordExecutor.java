@@ -174,6 +174,9 @@ public class NecroswordExecutor implements KnullExecutor {
         String workspaceDir = workspaceBasePath + "/build-" + build.getId();
         String repoDir = workspaceDir + "/" + build.getRepositoryName();
 
+        logger.info("Build paths - workspaceBasePath: '{}', workspaceDir: '{}', repoDir: '{}', repoName: '{}'",
+                workspaceBasePath, workspaceDir, repoDir, build.getRepositoryName());
+
         try {
             // Phase 1: Prepare workspace and clone repository (setup steps)
             executeSetupPhase(build, job, workspaceDir, repoDir, cancelled);
