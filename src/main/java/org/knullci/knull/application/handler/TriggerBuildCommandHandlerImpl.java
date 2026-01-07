@@ -113,6 +113,13 @@ public class TriggerBuildCommandHandlerImpl implements TriggerBuildCommandHandle
 
         logger.info("Triggering build for job: {} with commit: {} on branch: {}",
                 job.getName(), commitSha, branch);
+        logger.info("Parsed repository - owner: '{}', repoName: '{}', gitRepository: '{}'",
+                owner, repoName, gitRepository);
+
+        // Safety check - ensure repoName is not empty
+        if (repoName == null || repoName.isEmpty()) {
+            throw new RuntimeException("Could not extract repository name from URL: " + gitRepository);
+        }
 
         // Execute the build
         ExecuteBuildCommand buildCommand = new ExecuteBuildCommand(
