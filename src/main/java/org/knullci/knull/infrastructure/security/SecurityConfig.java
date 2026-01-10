@@ -17,6 +17,8 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf
+				.csrfTokenRepository(
+						org.springframework.security.web.csrf.CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.ignoringRequestMatchers("/api/v1/webhook/github", "/builds/*/cancel"))
 				.authorizeHttpRequests(auth -> auth
 						// Public endpoints
