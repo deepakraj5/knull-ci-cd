@@ -6,94 +6,933 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign in - Knull CI</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+        rel="stylesheet">
+    <style th:inline="none">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .login-left {
+            width: 480px;
+            min-width: 480px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .login-form-wrapper {
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            margin-bottom: 3rem;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .logo-text .highlight {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-subtitle {
+            font-size: 0.6875rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
+        .login-header h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            font-size: 0.9375rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-size: 0.9375rem;
+            font-family: inherit;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            background: #f8fafc;
+            color: #0f172a;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .password-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .forgot-link {
+            font-size: 0.8125rem;
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        .forgot-link:hover {
+            color: #2563eb;
+        }
+
+        .remember-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-input {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.625rem;
+            accent-color: #3b82f6;
+        }
+
+        .checkbox-label {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.9375rem 1.5rem;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            font-family: inherit;
+            color: #ffffff;
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.35);
+        }
+
+        .alert {
+            margin-top: 1.25rem;
+            padding: 0.875rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .footer-text {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        /* ===== RIGHT PANEL ===== */
+        .login-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f0f9ff 0%, #faf5ff 50%, #f0fdf4 100%);
+        }
+
+        /* Animated Floating Blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            animation: blobFloat 8s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(147, 197, 253, 0.3));
+            top: -10%;
+            right: -5%;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(196, 181, 253, 0.25));
+            bottom: 10%;
+            left: -5%;
+            animation-delay: 2s;
+        }
+
+        .blob-3 {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(134, 239, 172, 0.2));
+            top: 50%;
+            right: 30%;
+            animation-delay: 4s;
+        }
+
+        @keyframes blobFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+
+            33% {
+                transform: translateY(-20px) scale(1.05) rotate(5deg);
+            }
+
+            66% {
+                transform: translateY(10px) scale(0.98) rotate(-3deg);
+            }
+        }
+
+        /* Dot Grid with Shimmer */
+        .dot-grid {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.4;
+            animation: gridShimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes gridShimmer {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pipeline-viz {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 580px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Terminal Window */
+        .terminal-window {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+            animation: terminalGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes terminalGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+            }
+
+            50% {
+                box-shadow: 0 20px 60px rgba(59, 130, 246, 0.12);
+            }
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+
+        .terminal-dot.red {
+            background: #f87171;
+            animation-delay: 0s;
+        }
+
+        .terminal-dot.yellow {
+            background: #fbbf24;
+            animation-delay: 0.2s;
+        }
+
+        .terminal-dot.green {
+            background: #4ade80;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+        }
+
+        .terminal-body {
+            padding: 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            line-height: 1.7;
+            min-height: 280px;
+            background: #fafbfc;
+        }
+
+        /* Staggered Terminal Line Animation */
+        .terminal-line {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.25rem;
+            opacity: 0;
+            animation: lineAppear 0.5s ease-out forwards;
+        }
+
+        .terminal-line:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .terminal-line:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .terminal-line:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .terminal-line:nth-child(4) {
+            animation-delay: 0.9s;
+        }
+
+        .terminal-line:nth-child(5) {
+            animation-delay: 1.2s;
+        }
+
+        .terminal-line:nth-child(6) {
+            animation-delay: 1.5s;
+        }
+
+        .terminal-line:nth-child(7) {
+            animation-delay: 1.8s;
+        }
+
+        .terminal-line:nth-child(8) {
+            animation-delay: 2.1s;
+        }
+
+        .terminal-line:nth-child(9) {
+            animation-delay: 2.4s;
+        }
+
+        @keyframes lineAppear {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .terminal-line .prompt {
+            color: #16a34a;
+            margin-right: 0.5rem;
+        }
+
+        .terminal-line .command {
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .terminal-line .output {
+            color: #64748b;
+        }
+
+        .terminal-line .success {
+            color: #16a34a;
+        }
+
+        .terminal-line .time {
+            color: #94a3b8;
+            margin-left: auto;
+            font-size: 0.75rem;
+        }
+
+        .step-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 0.625rem;
+            font-size: 0.6875rem;
+            font-weight: 600;
+        }
+
+        .step-icon.success {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* Blinking Cursor */
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: #16a34a;
+            margin-left: 4px;
+            border-radius: 1px;
+            animation: cursorBlink 1s step-end infinite;
+        }
+
+        @keyframes cursorBlink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Pipeline Bar */
+        .pipeline-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 1rem 1.25rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            animation: slideUp 0.8s ease-out 0.3s backwards;
+        }
+
+        .pipeline-stage {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .stage-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: stagePop 0.5s ease-out backwards;
+        }
+
+        .stage-dot:nth-child(1) {
+            animation-delay: 2.6s;
+        }
+
+        .pipeline-stage:nth-child(3) .stage-dot {
+            animation-delay: 2.9s;
+        }
+
+        .pipeline-stage:nth-child(5) .stage-dot {
+            animation-delay: 3.2s;
+        }
+
+        .pipeline-stage:nth-child(7) .stage-dot {
+            animation-delay: 3.5s;
+        }
+
+        @keyframes stagePop {
+            from {
+                transform: scale(0);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .stage-dot.complete {
+            background: #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+            animation: stageGlow 2s ease-in-out infinite, stagePop 0.5s ease-out backwards;
+        }
+
+        @keyframes stageGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 16px rgba(34, 197, 94, 0.6);
+            }
+        }
+
+        .stage-name {
+            font-size: 0.75rem;
+            color: #475569;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+        }
+
+        .stage-connector {
+            flex: 0.5;
+            height: 2px;
+            background: linear-gradient(90deg, #22c55e, #3b82f6);
+            border-radius: 1px;
+            transform-origin: left;
+            animation: connectorGrow 0.5s ease-out backwards;
+        }
+
+        .stage-connector:nth-child(2) {
+            animation-delay: 2.7s;
+        }
+
+        .stage-connector:nth-child(4) {
+            animation-delay: 3.0s;
+        }
+
+        .stage-connector:nth-child(6) {
+            animation-delay: 3.3s;
+        }
+
+        @keyframes connectorGrow {
+            from {
+                transform: scaleX(0);
+            }
+
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        /* Build Stats */
+        .build-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            opacity: 0;
+            animation: statFadeIn 0.6s ease-out forwards;
+        }
+
+        .stat-item:nth-child(1) {
+            animation-delay: 3.6s;
+        }
+
+        .stat-item:nth-child(2) {
+            animation-delay: 3.8s;
+        }
+
+        .stat-item:nth-child(3) {
+            animation-delay: 4.0s;
+        }
+
+        @keyframes statFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .stat-icon.green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .stat-icon.blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .stat-icon.purple {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .stat-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .stat-label {
+            font-size: 0.6875rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        @media (max-width: 1024px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .login-left {
+                width: 100%;
+                min-width: unset;
+                min-height: 100vh;
+                border-right: none;
+            }
+
+            .login-right {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-        <div class="flex items-center gap-3 mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 100 100" fill="none">
-                <defs>
-                    <linearGradient id="knullGradientLogin" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <circle cx="50" cy="50" r="45" stroke="url(#knullGradientLogin)" stroke-width="3" fill="none"
-                    opacity="0.3" />
-                <rect x="25" y="25" width="8" height="50" fill="url(#knullGradientLogin)" rx="2" />
-                <path d="M33 40 L55 25" stroke="url(#knullGradientLogin)" stroke-width="8" stroke-linecap="round" />
-                <circle cx="55" cy="25" r="5" fill="#3B82F6" />
-                <circle cx="55" cy="25" r="3" fill="white" />
-                <path d="M33 60 L55 75" stroke="url(#knullGradientLogin)" stroke-width="8" stroke-linecap="round" />
-                <circle cx="55" cy="75" r="5" fill="#6366F1" />
-                <circle cx="55" cy="75" r="3" fill="white" />
-                <circle cx="70" cy="30" r="3" fill="#3B82F6" opacity="0.6" />
-                <circle cx="75" cy="50" r="3" fill="#6366F1" opacity="0.6" />
-                <circle cx="70" cy="70" r="3" fill="#3B82F6" opacity="0.6" />
-                <path d="M55 25 L70 30" stroke="#3B82F6" stroke-width="2" opacity="0.4" stroke-dasharray="2,2" />
-                <path d="M55 75 L70 70" stroke="#6366F1" stroke-width="2" opacity="0.4" stroke-dasharray="2,2" />
-            </svg>
-            <div class="flex flex-col">
-                <h1 class="text-2xl font-bold text-gray-900">Knull<span class="text-blue-600">CI</span></h1>
-                <span class="text-xs text-gray-500">Continuous Integration</span>
-            </div>
-        </div>
-
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Sign in to your account</h2>
-        <p class="text-sm text-gray-600 mb-6">Access builds, jobs, and settings.</p>
-
-        <form th:action="@{/login}" method="post" class="space-y-5">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                <input id="username" name="username" type="text" autocomplete="username" required
-                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-
-            <div>
-                <div class="flex items-center justify-between mb-1">
-                    <label for="password" class="text-sm font-medium text-gray-700">Password</label>
-                    <a href="#" class="text-xs text-blue-600 hover:text-blue-800">Forgot?</a>
+<body>
+    <div class="login-container">
+        <div class="login-left">
+            <div class="login-form-wrapper">
+                <div class="logo-section">
+                    <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+                        <defs>
+                            <linearGradient id="knullGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3B82F6" />
+                                <stop offset="100%" stop-color="#6366F1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="50" cy="50" r="45" stroke="url(#knullGrad)" stroke-width="3" fill="none"
+                            opacity="0.3" />
+                        <rect x="25" y="25" width="8" height="50" fill="url(#knullGrad)" rx="2" />
+                        <path d="M33 40 L55 25" stroke="url(#knullGrad)" stroke-width="8" stroke-linecap="round" />
+                        <circle cx="55" cy="25" r="5" fill="#3B82F6" />
+                        <circle cx="55" cy="25" r="3" fill="#ffffff" />
+                        <path d="M33 60 L55 75" stroke="url(#knullGrad)" stroke-width="8" stroke-linecap="round" />
+                        <circle cx="55" cy="75" r="5" fill="#6366F1" />
+                        <circle cx="55" cy="75" r="3" fill="#ffffff" />
+                    </svg>
+                    <div class="logo-text">
+                        <h1>Knull<span class="highlight">CI</span></h1>
+                        <div class="logo-subtitle">Continuous Integration</div>
+                    </div>
                 </div>
-                <input id="password" name="password" type="password" autocomplete="current-password" required
-                    class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+
+                <div class="login-header">
+                    <h2>Welcome back</h2>
+                    <p>Sign in to continue to your dashboard</p>
+                </div>
+
+                <form th:action="@{/login}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <input id="username" name="username" type="text" autocomplete="username" required
+                            class="form-input" placeholder="Enter your username" />
+                    </div>
+
+                    <div class="form-group">
+                        <div class="password-header">
+                            <label for="password" class="form-label">Password</label>
+                            <a href="#" class="forgot-link">Forgot?</a>
+                        </div>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required
+                            class="form-input" placeholder="Enter your password" />
+                    </div>
+
+                    <div class="remember-row">
+                        <input id="remember-me" name="remember-me" type="checkbox" class="checkbox-input" />
+                        <label for="remember-me" class="checkbox-label">Keep me signed in</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Sign In</button>
+                </form>
+
+                <div th:if="${param.error}" class="alert alert-error">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Invalid credentials. Please try again.
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Logged out successfully.
+                </div>
+                <div th:if="${setupSuccess}" class="alert alert-success">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>Admin <strong th:text="${adminUsername}"></strong> created!</span>
+                </div>
+
+                <p class="footer-text">© 2026 KnullCI -
+                    Open Source CI/CD</p>
             </div>
+        </div>
 
-            <div class="flex items-center">
-                <input id="remember-me" name="remember-me" type="checkbox"
-                    class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                <label for="remember-me" class="ml-2 block text-sm text-gray-700">Remember me</label>
+        <div class="login-right">
+            <div class="dot-grid"></div>
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+
+            <div class="pipeline-viz">
+                <div class="terminal-window">
+                    <div class="terminal-header">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                        <span class="terminal-title">knull-ci - Build #247</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line">
+                            <span class="prompt">❯</span>
+                            <span class="command">git pull origin main</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="output">Already up to date.</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="prompt">❯</span>
+                            <span class="command">knull build --stage=test</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="step-icon success">✓</span>
+                            <span class="output">Dependencies installed</span>
+                            <span class="time">12s</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="step-icon success">✓</span>
+                            <span class="output">Compiled successfully</span>
+                            <span class="time">45s</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="step-icon success">✓</span>
+                            <span class="output">All tests passed</span>
+                            <span class="time">38s</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="success"> ✓ 127 tests passed</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="success"> ✓ Coverage: 94.2%</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="step-icon success">✓</span>
+                            <span class="success">Deployment complete!</span>
+                            <span class="time">1m 52s</span>
+                            <span class="cursor"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pipeline-bar">
+                    <div class="pipeline-stage">
+                        <div class="stage-dot complete"></div>
+                        <span class="stage-name">Clone</span>
+                    </div>
+                    <div class="stage-connector"></div>
+                    <div class="pipeline-stage">
+                        <div class="stage-dot complete"></div>
+                        <span class="stage-name">Build</span>
+                    </div>
+                    <div class="stage-connector"></div>
+                    <div class="pipeline-stage">
+                        <div class="stage-dot complete"></div>
+                        <span class="stage-name">Test</span>
+                    </div>
+                    <div class="stage-connector"></div>
+                    <div class="pipeline-stage">
+                        <div class="stage-dot complete"></div>
+                        <span class="stage-name">Deploy</span>
+                    </div>
+                </div>
+
+                <div class="build-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon green">✓</div>
+                        <div class="stat-text">
+                            <span class="stat-value">98.4%</span>
+                            <span class="stat-label">Success Rate</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon blue">⚡</div>
+                        <div class="stat-text">
+                            <span class="stat-value">2.3m</span>
+                            <span class="stat-label">Avg Build</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon purple">📦</div>
+                        <div class="stat-text">
+                            <span class="stat-value">1,247</span>
+                            <span class="stat-label">Builds</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <button type="submit"
-                class="w-full inline-flex justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-white font-medium shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                Sign In
-            </button>
-        </form>
-
-        <div th:if="${param.error}"
-            class="mt-4 bg-red-50 text-red-800 border border-red-200 px-3 py-2 rounded-lg text-sm">
-            Invalid username or password. Please try again.
         </div>
-        <div th:if="${param.logout}"
-            class="mt-4 bg-green-50 text-green-800 border border-green-200 px-3 py-2 rounded-lg text-sm">
-            You have been logged out.
-        </div>
-        <div th:if="${setupSuccess}"
-            class="mt-4 bg-green-50 text-green-800 border border-green-200 px-3 py-2 rounded-lg text-sm">
-            <div class="flex items-center gap-2">
-                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Admin account <strong th:text="${adminUsername}"></strong> created successfully! Please sign
-                    in.</span>
-            </div>
-        </div>
-
-        <p class="mt-6 text-center text-xs text-gray-500">© <span
-                th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> KnullCI</p>
     </div>
 </body>
 

@@ -6,6 +6,522 @@
     <title>Users | KnullCI</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <style th:inline="none">
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .users-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .page-subtitle {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        .btn-create {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #ffffff;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 0.625rem;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-create:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-create svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Stats Cards */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .stat-icon.total {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .stat-icon.active {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .stat-icon.inactive {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .stat-icon.locked {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* Flash Messages */
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            border-radius: 0.625rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Search & Filters */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+            width: 280px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.625rem 0.875rem 0.625rem 2.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            background: #ffffff;
+            transition: all 0.15s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: #94a3b8;
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-pill {
+            padding: 0.5rem 0.875rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+            border-radius: 9999px;
+            background: #ffffff;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .filter-pill:hover,
+        .filter-pill.active {
+            background: #3b82f6;
+            color: #ffffff;
+            border-color: #3b82f6;
+        }
+
+        /* Users Table */
+        .users-card {
+            background: #ffffff;
+            border-radius: 0.875rem;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .users-table thead {
+            background: #f8fafc;
+        }
+
+        .users-table th {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .users-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .users-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .users-table tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        .users-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* User Cell */
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .user-avatar.admin {
+            background: linear-gradient(135deg, #f43f5e, #e11d48);
+        }
+
+        .user-avatar.developer {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        .user-avatar.viewer {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .user-username {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        /* Email */
+        .user-email {
+            font-size: 0.875rem;
+            color: #475569;
+        }
+
+        /* Role Badge */
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            border-radius: 0.375rem;
+        }
+
+        .role-badge.admin {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            color: #dc2626;
+        }
+
+        .role-badge.developer {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            color: #2563eb;
+        }
+
+        .role-badge.viewer {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            color: #64748b;
+        }
+
+        .role-badge svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Status */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-badge.active .status-dot {
+            background: #22c55e;
+        }
+
+        .status-badge.active {
+            color: #16a34a;
+        }
+
+        .status-badge.inactive .status-dot {
+            background: #f59e0b;
+        }
+
+        .status-badge.inactive {
+            color: #d97706;
+        }
+
+        .status-badge.locked .status-dot {
+            background: #ef4444;
+        }
+
+        .status-badge.locked {
+            color: #dc2626;
+        }
+
+        /* Last Login */
+        .last-login {
+            font-size: 0.8125rem;
+            color: #64748b;
+        }
+
+        .last-login.never {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        /* Actions */
+        .actions-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 0.375rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+
+        .action-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .action-btn.edit {
+            color: #3b82f6;
+        }
+
+        .action-btn.edit:hover {
+            background: #eff6ff;
+        }
+
+        .action-btn.lock {
+            color: #d97706;
+        }
+
+        .action-btn.lock:hover {
+            background: #fef3c7;
+        }
+
+        .action-btn.unlock {
+            color: #16a34a;
+        }
+
+        .action-btn.unlock:hover {
+            background: #dcfce7;
+        }
+
+        .action-btn.delete {
+            color: #dc2626;
+        }
+
+        .action-btn.delete:hover {
+            background: #fee2e2;
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            background: #f1f5f9;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .empty-icon svg {
+            width: 32px;
+            height: 32px;
+            color: #94a3b8;
+        }
+
+        .empty-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.25rem;
+        }
+
+        .empty-desc {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 text-gray-800">
@@ -14,114 +530,217 @@
 
     <!-- Page Container -->
     <div id="main-content" class="main-content ml-64 p-8 transition-all duration-300">
-        <div class="max-w-7xl mx-auto">
+        <div class="users-container">
 
             <!-- Flash Messages -->
-            <div th:if="${successMessage}" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+            <div th:if="${successMessage}" class="alert alert-success">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <span th:text="${successMessage}"></span>
             </div>
-            <div th:if="${errorMessage}" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <div th:if="${errorMessage}" class="alert alert-error">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <span th:text="${errorMessage}"></span>
             </div>
 
-            <!-- Header -->
-            <div class="flex justify-between items-center mb-8">
+            <!-- Page Header -->
+            <div class="page-header">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Users</h1>
-                    <p class="text-gray-600 mt-2">Manage users and their roles</p>
+                    <h1 class="page-title">Users</h1>
+                    <p class="page-subtitle">Manage user accounts, roles, and permissions</p>
                 </div>
-                <a th:href="@{/users/new}"
-                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
-                    + New User
+                <a th:href="@{/users/new}" class="btn-create">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    Add User
                 </a>
             </div>
 
-            <!-- Role Legend -->
-            <div class="mb-6 flex gap-4 text-sm">
-                <div class="flex items-center">
-                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold mr-2">ADMIN</span>
-                    <span class="text-gray-600">Full access</span>
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" th:text="${users != null} ? ${#lists.size(users)} : '0'">0</span>
+                        <span class="stat-label">Total Users</span>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold mr-2">DEVELOPER</span>
-                    <span class="text-gray-600">Can manage jobs</span>
+                <div class="stat-card">
+                    <div class="stat-icon active">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value"
+                            th:text="${users != null} ? ${#lists.size(users.?[active == true and accountLocked == false])} : '0'">0</span>
+                        <span class="stat-label">Active</span>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold mr-2">VIEWER</span>
-                    <span class="text-gray-600">Read-only</span>
+                <div class="stat-card">
+                    <div class="stat-icon inactive">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value"
+                            th:text="${users != null} ? ${#lists.size(users.?[active == false])} : '0'">0</span>
+                        <span class="stat-label">Inactive</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon locked">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value"
+                            th:text="${users != null} ? ${#lists.size(users.?[accountLocked == true])} : '0'">0</span>
+                        <span class="stat-label">Locked</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Users Table -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Users Table Card -->
+            <div class="users-card">
                 <div th:if="${users != null && !users.isEmpty()}">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="users-table">
+                        <thead>
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    User</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Email</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Role</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Last Login</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions</th>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody>
                             <tr th:each="user : ${users}">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold"
-                                                 th:text="${user.username.substring(0, 1).toUpperCase()}">U</div>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900" th:text="${user.displayName ?: user.username}"></div>
-                                            <div class="text-sm text-gray-500" th:text="'@' + ${user.username}"></div>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar"
+                                            th:classappend="${user.role.name() == 'ADMIN'} ? 'admin' : (${user.role.name() == 'DEVELOPER'} ? 'developer' : 'viewer')"
+                                            th:text="${user.username.substring(0, 1).toUpperCase()}">U</div>
+                                        <div class="user-info">
+                                            <span class="user-name"
+                                                th:text="${user.displayName ?: user.username}"></span>
+                                            <span class="user-username" th:text="'@' + ${user.username}"></span>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-600" th:text="${user.email ?: 'Not set'}"></div>
+                                <td>
+                                    <span class="user-email" th:text="${user.email ?: 'Not set'}"></span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span th:text="${user.role}"
-                                        th:classappend="${user.role.name() == 'ADMIN'} ? 'bg-red-100 text-red-800' : (${user.role.name() == 'DEVELOPER'} ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800')"
-                                        class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full">
+                                <td>
+                                    <span class="role-badge"
+                                        th:classappend="${user.role.name() == 'ADMIN'} ? 'admin' : (${user.role.name() == 'DEVELOPER'} ? 'developer' : 'viewer')">
+                                        <!-- Admin Icon -->
+                                        <svg th:if="${user.role.name() == 'ADMIN'}" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                        </svg>
+                                        <!-- Developer Icon -->
+                                        <svg th:if="${user.role.name() == 'DEVELOPER'}" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                        </svg>
+                                        <!-- Viewer Icon -->
+                                        <svg th:if="${user.role.name() == 'VIEWER'}" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                        <span th:text="${user.role}"></span>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span th:if="${user.accountLocked}" class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Locked</span>
-                                    <span th:if="${!user.active}" class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Inactive</span>
-                                    <span th:if="${user.active && !user.accountLocked}" class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Active</span>
+                                <td>
+                                    <span th:if="${user.accountLocked}" class="status-badge locked">
+                                        <span class="status-dot"></span>
+                                        Locked
+                                    </span>
+                                    <span th:if="${!user.active && !user.accountLocked}" class="status-badge inactive">
+                                        <span class="status-dot"></span>
+                                        Inactive
+                                    </span>
+                                    <span th:if="${user.active && !user.accountLocked}" class="status-badge active">
+                                        <span class="status-dot"></span>
+                                        Active
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <span th:if="${user.lastLoginAt}" th:text="${#temporals.format(user.lastLoginAt, 'MMM dd, yyyy HH:mm')}"></span>
-                                    <span th:unless="${user.lastLoginAt}" class="text-gray-400">Never</span>
+                                <td>
+                                    <span th:if="${user.lastLoginAt}" class="last-login"
+                                        th:text="${#temporals.format(user.lastLoginAt, 'MMM dd, yyyy')}"></span>
+                                    <span th:unless="${user.lastLoginAt}" class="last-login never">Never</span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a th:href="@{'/users/' + ${user.id} + '/edit'}"
-                                        class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
-                                    
-                                    <form th:action="@{'/users/' + ${user.id} + '/toggle-lock'}" method="post"
-                                        style="display: inline;">
-                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                        <button type="submit" 
-                                            th:text="${user.accountLocked} ? 'Unlock' : 'Lock'"
-                                            th:class="${user.accountLocked} ? 'text-green-600 hover:text-green-900 mr-3' : 'text-yellow-600 hover:text-yellow-900 mr-3'"></button>
-                                    </form>
-                                    
-                                    <form th:action="@{'/users/' + ${user.id} + '/delete'}" method="post"
-                                        style="display: inline;"
-                                        onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                        <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
-                                    </form>
+                                <td>
+                                    <div class="actions-cell">
+                                        <!-- Edit -->
+                                        <a th:href="@{'/users/' + ${user.id} + '/edit'}" class="action-btn edit"
+                                            title="Edit User">
+                                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </a>
+
+                                        <!-- Lock/Unlock -->
+                                        <form th:action="@{'/users/' + ${user.id} + '/toggle-lock'}" method="post"
+                                            style="display: inline;">
+                                            <input type="hidden" th:name="${_csrf.parameterName}"
+                                                th:value="${_csrf.token}" />
+                                            <button type="submit"
+                                                th:class="${user.accountLocked} ? 'action-btn unlock' : 'action-btn lock'"
+                                                th:title="${user.accountLocked} ? 'Unlock User' : 'Lock User'">
+                                                <svg th:if="${user.accountLocked}" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                                                </svg>
+                                                <svg th:unless="${user.accountLocked}" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                                </svg>
+                                            </button>
+                                        </form>
+
+                                        <!-- Delete -->
+                                        <form th:action="@{'/users/' + ${user.id} + '/delete'}" method="post"
+                                            style="display: inline;"
+                                            onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                            <input type="hidden" th:name="${_csrf.parameterName}"
+                                                th:value="${_csrf.token}" />
+                                            <button type="submit" class="action-btn delete" title="Delete User">
+                                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                    stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -129,19 +748,22 @@
                 </div>
 
                 <!-- Empty State -->
-                <div th:if="${users == null || users.isEmpty()}" class="text-center py-12">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No users yet</h3>
-                    <p class="mt-1 text-sm text-gray-500">Get started by creating a new user</p>
-                    <div class="mt-6">
-                        <a th:href="@{/users/new}"
-                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                            + New User
-                        </a>
+                <div th:if="${users == null || users.isEmpty()}" class="empty-state">
+                    <div class="empty-icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
                     </div>
+                    <h3 class="empty-title">No users yet</h3>
+                    <p class="empty-desc">Get started by creating your first user account</p>
+                    <a th:href="@{/users/new}" class="btn-create">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                        Add User
+                    </a>
                 </div>
             </div>
 

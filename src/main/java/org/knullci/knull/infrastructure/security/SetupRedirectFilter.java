@@ -30,6 +30,8 @@ public class SetupRedirectFilter extends OncePerRequestFilter {
     // Paths that should be exempt from setup redirect
     private static final Set<String> EXEMPT_PATHS = Set.of(
             "/setup",
+            "/login",
+            "/logout",
             "/css",
             "/js",
             "/images",
